@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LexTrack" />
+  <title>LexTrack Pro ⚖️</title>
+
+  <!-- ═══════════════════════════════════════════════
+       ADMOB / ADSENSE
+       Replace ca-pub-XXXXXXXXXXXXXXXX with your real AdMob ID
+  ═══════════════════════════════════════════════ -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Georgia',serif;background:#0a0f1e;color:#e2e8f0;min-height:100vh}
+    input,select,textarea,button{font-family:inherit}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#3b82f6!important}
+    button{cursor:pointer}
+    button:active{opacity:0.75}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:#0f172a}
+    ::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+    .page{display:none!important}
+    .page.active{display:block!important}
+    .auth-page{display:none!important}
+    .auth-page.active{display:flex!important}
+    .app-shell{display:none}
+    .app-shell.active{display:flex}
+    @keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+    .modal-overlay.active{display:flex;animation:fadeIn 0.2s ease}
+    .modal-box{background:linear-gradient(135deg,#0f172a,#1a0a2e);border:2px solid #f59e0b;border-radius:20px;padding:24px;max-width:480px;width:100%;box-shadow:0 0 60px rgba(245,158,11,0.3);animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+    .toast{position:fixed;top:72px;right:16px;z-index:9998;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);animation:slideUp 0.3s ease;display:none}
+    .toast.active{display:block}
+    .nav-btn{padding:7px 12px;border-radius:8px;border:none;font-size:12px;display:flex;align-items:center;gap:5px;transition:all 0.2s;background:transparent;color:#94a3b8;white-space:nowrap}
+    .nav-btn.active{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff}
+    .card{background:#0f172a;border:1px solid #1e3a5f;border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer}
+    .card.today{border-color:#f59e0b}
+    .field-group{margin-bottom:14px}
+    .field-group label{display:block;font-size:11px;color:#94a3b8;margin-bottom:5px}
+    .field-input{width:100%;padding:11px 14px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:14px}
+    .section-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #1e293b}
+    .stat-card{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;padding:18px 20px}
+    .badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
+    .btn-primary{padding:12px 28px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px}
+    .btn-secondary{padding:12px 22px;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:10px;font-size:14px}
+    .btn-edit{padding:4px 10px;background:#1e3a5f;color:#60a5fa;border:none;border-radius:7px;font-size:11px}
+    .btn-del{padding:4px 10px;background:#3b0f0f;color:#f87171;border:none;border-radius:7px;font-size:11px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+    /* AD BANNER */
+    .ad-banner{background:linear-gradient(135deg,#0f172a,#1a1a2e);border:1px dashed #334155;border-radius:10px;padding:10px;text-align:center;margin:12px 0;overflow:hidden;min-height:60px;display:flex;align-items:center;justify-content:center}
+    .ad-banner-top{background:linear-gradient(135deg,#0f172a,#1a1a2e);border:1px dashed #334155;border-bottom:1px solid #1e3a5f;padding:8px;text-align:center;overflow:hidden;min-height:50px;display:flex;align-items:center;justify-content:center}
+    .ad-label{font-size:9px;color:#475569;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+
+    /* LANG TOGGLE */
+    .lang-toggle{display:flex;background:#0a0f1e;border-radius:20px;padding:3px;border:1px solid #1e3a5f}
+    .lang-btn{padding:5px 12px;border-radius:16px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s}
+    .lang-btn.active{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff}
+    .lang-btn:not(.active){background:transparent;color:#64748b}
+
+    @media(max-width:640px){
+      .grid-4{grid-template-columns:1fr 1fr}
+      .grid-3{grid-template-columns:1fr 1fr}
+      .grid-2{grid-template-columns:1fr}
+      .nav-label{display:none}
+      .header-user-info{display:none}
+      nav{gap:2px}
+      .nav-btn{padding:8px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     TOP AD BANNER
+══════════════════════════════════════ -->
+<div class="ad-banner-top" id="top-ad-area">
+  <div>
+    <div class="ad-label">Advertisement</div>
+    <!-- Replace with your real AdSense/AdMob ad unit -->
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════ -->
+<div id="auth-screen" class="auth-page active" style="min-height:100vh;background:linear-gradient(135deg,#0a0f1e 0%,#1a0a2e 50%,#0a1628 100%);align-items:center;justify-content:center;padding:20px;flex-direction:column">
+  <div style="position:fixed;inset:0;overflow:hidden;pointer-events:none">
+    <div style="position:absolute;top:10%;left:5%;width:300px;height:300px;background:radial-gradient(circle,#3b82f622,transparent 70%);border-radius:50%"></div>
+    <div style="position:absolute;bottom:10%;right:5%;width:400px;height:400px;background:radial-gradient(circle,#8b5cf622,transparent 70%);border-radius:50%"></div>
+  </div>
+  <div style="width:100%;max-width:420px;position:relative;z-index:1">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:68px;height:68px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(59,130,246,0.4)">⚖️</div>
+      <h1 style="font-size:24px;font-weight:800;color:#f1f5f9">LexTrack Pro</h1>
+      <p style="color:#64748b;font-size:12px;margin-top:4px">Advocate Case Management System</p>
+      <!-- Language toggle on auth screen -->
+      <div style="display:flex;justify-content:center;margin-top:12px">
+        <div class="lang-toggle">
+          <button class="lang-btn" id="auth-lang-ur" onclick="setLang('ur')">اردو</button>
+          <button class="lang-btn active" id="auth-lang-en" onclick="setLang('en')">English</button>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(15,23,42,0.95);border:1px solid #1e3a5f;border-radius:20px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,0.6)">
+      <div style="display:flex;background:#0a0f1e;border-radius:12px;padding:4px;margin-bottom:22px">
+        <button id="tab-login" onclick="switchAuthMode('login')" style="flex:1;padding:10px;border-radius:10px;border:none;font-weight:700;font-size:13px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff" data-ur="🔐 لاگ ان" data-en="🔐 Login">🔐 Login</button>
+        <button id="tab-register" onclick="switchAuthMode('register')" style="flex:1;padding:10px;border-radius:10px;border:none;font-weight:700;font-size:13px;background:transparent;color:#64748b" data-ur="📝 رجسٹر" data-en="📝 Register">📝 Register</button>
+      </div>
+      <div id="auth-error" style="display:none;background:#7f1d1d44;border:1px solid #ef444444;border-radius:10px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:12px"></div>
+      <div id="field-name" style="display:none" class="field-group">
+        <label data-ur="وکیل کا نام" data-en="Advocate Name">Advocate Name</label>
+        <input id="auth-name" class="field-input" data-ur-placeholder="آپ کا پورا نام" data-en-placeholder="Your full name" placeholder="Your full name" />
+      </div>
+      <div class="field-group">
+        <label>Email</label>
+        <input id="auth-email" class="field-input" type="email" placeholder="advocate@example.com" onkeydown="if(event.key==='Enter')doAuth()" />
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input id="auth-password" class="field-input" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()" />
+      </div>
+      <div id="field-confirm" style="display:none" class="field-group">
+        <label data-ur="Password تصدیق" data-en="Confirm Password">Confirm Password</label>
+        <input id="auth-confirm" class="field-input" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()" />
+      </div>
+      <button onclick="doAuth()" id="auth-btn" class="btn-primary" style="width:100%;margin-top:4px" data-ur="🔐 لاگ ان کریں" data-en="🔐 Login">🔐 Login</button>
+      <p style="text-align:center;font-size:12px;color:#475569;margin-top:16px" id="auth-switch-text"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div id="alert-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:44px;margin-bottom:6px;animation:pulse 1.5s infinite">🔔</div>
+      <h2 style="font-size:19px;font-weight:800;color:#f59e0b" id="alert-title">Today's Hearing Reminder</h2>
+      <div id="alert-date" style="margin-top:8px;padding:4px 12px;background:#f59e0b22;border-radius:20px;display:inline-block;font-size:12px;color:#f59e0b;font-weight:600"></div>
+    </div>
+    <div id="alert-cases-list" style="max-height:260px;overflow-y:auto"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button onclick="closeAlert();showPage('calendar')" style="flex:1;padding:11px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border:none;border-radius:10px;font-weight:800;font-size:13px" id="alert-view-btn">📅 View All Hearings</button>
+      <button onclick="closeAlert()" style="padding:11px 16px;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:10px;font-size:13px" id="alert-close-btn">Close ✕</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- ══════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════ -->
+<div id="app-shell" class="app-shell" style="flex-direction:column;min-height:100vh">
+
+  <header style="background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);border-bottom:1px solid #1e3a5f;padding:0 16px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.5)">
+    <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">⚖️</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:#e2e8f0">LexTrack Pro</div>
+          <div style="font-size:9px;color:#64748b;letter-spacing:1px;text-transform:uppercase">Advocate Manager</div>
+        </div>
+      </div>
+      <nav style="display:flex;gap:2px;align-items:center">
+        <button class="nav-btn active" id="nav-dashboard" onclick="showPage('dashboard')">📊 <span class="nav-label" data-ur="ڈیش بورڈ" data-en="Dashboard">Dashboard</span></button>
+        <button class="nav-btn" id="nav-add" onclick="newCase()">➕ <span class="nav-label" data-ur="نیا کیس" data-en="New Case">New Case</span></button>
+        <button class="nav-btn" id="nav-cases" onclick="showPage('cases')">📁 <span class="nav-label" data-ur="تمام کیسز" data-en="All Cases">All Cases</span></button>
+        <button class="nav-btn" id="nav-calendar" onclick="showPage('calendar')">📅 <span class="nav-label" data-ur="پیشیاں" data-en="Hearings">Hearings</span><span id="today-badge" style="display:none;background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;font-size:9px;font-weight:800;margin-left:2px"></span></button>
+        <button id="bell-btn" onclick="showAlert()" style="display:none;padding:7px 10px;border-radius:8px;border:1px solid #f59e0b44;font-size:16px;background:#f59e0b11;color:#f59e0b;position:relative">🔔<span style="position:absolute;top:2px;right:2px;width:7px;height:7px;background:#ef4444;border-radius:50%;display:block"></span></button>
+        <!-- Language Toggle -->
+        <div class="lang-toggle" style="margin-left:6px">
+          <button class="lang-btn" id="app-lang-ur" onclick="setLang('ur')">اردو</button>
+          <button class="lang-btn active" id="app-lang-en" onclick="setLang('en')">EN</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-left:6px;padding-left:8px;border-left:1px solid #1e3a5f">
+          <div id="user-avatar" style="width:30px;height:30px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff"></div>
+          <div class="header-user-info" style="font-size:11px">
+            <div id="user-name-display" style="color:#e2e8f0;font-weight:600;line-height:1.2"></div>
+            <div id="user-email-display" style="color:#475569;font-size:10px"></div>
+          </div>
+          <button onclick="doLogout()" id="logout-btn" style="padding:5px 10px;background:#3b0f0f;color:#f87171;border:none;border-radius:7px;font-size:10px;font-weight:600" data-ur="لاگ آؤٹ" data-en="Logout">Logout</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1200px;margin:0 auto;width:100%;padding:20px 16px">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <h1 style="font-size:22px;font-weight:700;color:#f1f5f9;margin-bottom:4px" id="dash-welcome">Welcome 👋</h1>
+      <p style="color:#64748b;font-size:13px;margin-bottom:16px" id="dash-date"></p>
+
+      <!-- AD BANNER IN DASHBOARD -->
+      <div class="ad-banner">
+        <div>
+          <div class="ad-label">Advertisement</div>
+          <ins class="adsbygoogle" style="display:inline-block;width:300px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+
+      <div id="today-banner" style="display:none;background:linear-gradient(135deg,#78350f,#92400e);border:1px solid #f59e0b;border-radius:12px;padding:14px 18px;margin-bottom:16px;cursor:pointer" onclick="showAlert()">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:22px">🔔</span>
+            <div><div id="today-banner-text" style="font-weight:800;font-size:14px;color:#fde68a"></div><div id="today-banner-names" style="font-size:12px;color:#fbbf24"></div></div>
+          </div>
+          <span style="color:#f59e0b;font-size:12px;font-weight:600" id="detail-arrow">Details →</span>
+        </div>
+      </div>
+      <div id="tomorrow-banner" style="display:none;background:#1e293b;border:1px solid #3b82f644;border-radius:10px;padding:10px 16px;margin-bottom:16px;font-size:13px">
+        📆 <span id="tomorrow-banner-text" style="color:#60a5fa;font-weight:700"></span> <span id="tomorrow-banner-names" style="color:#94a3b8"></span>
+      </div>
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card" style="border:1px solid #3b82f633"><div style="font-size:22px;margin-bottom:6px">📁</div><div id="stat-total" style="font-size:28px;font-weight:800;color:#3b82f6">0</div><div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px" data-ur="کل کیسز" data-en="Total Cases">Total Cases</div></div>
+        <div class="stat-card" style="border:1px solid #22c55e33"><div style="font-size:22px;margin-bottom:6px">⚡</div><div id="stat-active" style="font-size:28px;font-weight:800;color:#22c55e">0</div><div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px" data-ur="فعال" data-en="Active">Active</div></div>
+        <div class="stat-card" style="border:1px solid #f59e0b33"><div style="font-size:22px;margin-bottom:6px">📅</div><div id="stat-today" style="font-size:28px;font-weight:800;color:#f59e0b">0</div><div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px" data-ur="آج کی پیشیاں" data-en="Today's Hearings">Today's Hearings</div></div>
+        <div class="stat-card" style="border:1px solid #ef444433"><div style="font-size:22px;margin-bottom:6px">🚨</div><div id="stat-urgent" style="font-size:28px;font-weight:800;color:#ef4444">0</div><div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px" data-ur="فوری" data-en="Urgent">Urgent</div></div>
+      </div>
+      <div class="grid-2">
+        <div style="background:#0f172a;border:1px solid #1e3a5f;border-radius:12px;padding:20px">
+          <h3 id="today-heading" style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:12px">📅 Today's Hearings</h3>
+          <div id="dash-today-list"></div>
+        </div>
+        <div style="background:#0f172a;border:1px solid #1e3a5f;border-radius:12px;padding:20px">
+          <h3 id="recent-heading" style="font-size:13px;font-weight:700;color:#3b82f6;margin-bottom:12px">🕐 Recent Cases</h3>
+          <div id="dash-recent-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD/EDIT CASE -->
+    <div id="page-add" class="page">
+      <h2 id="form-title" style="font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:4px">➕ Add New Case</h2>
+      <p id="form-subtitle" style="color:#64748b;font-size:13px;margin-bottom:20px">Fill in all the details</p>
+      <div style="background:#0f172a;border:1px solid #1e3a5f;border-radius:16px;padding:24px">
+        <div class="section-title" style="color:#3b82f6" id="sec-case">⚖️ CASE INFORMATION</div>
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="field-group"><label id="lbl-caseNum">Case Number *</label><input id="f-caseNumber" class="field-input" placeholder="CR/2024/001" /></div>
+          <div class="field-group"><label id="lbl-courtDate">Hearing Date</label><input id="f-courtDate" class="field-input" type="date" /></div>
+          <div class="field-group"><label id="lbl-judge">Judge Name</label><input id="f-judgeName" class="field-input" /></div>
+          <div class="field-group"><label id="lbl-time">Hearing Time</label><input id="f-courtTime" class="field-input" type="time" /></div>
+          <div class="field-group"><label id="lbl-court">Court Name</label><input id="f-courtName" class="field-input" /></div>
+          <div class="field-group"><label id="lbl-next">Next Hearing</label><input id="f-nextHearing" class="field-input" type="date" /></div>
+          <div class="field-group">
+            <label id="lbl-activity">Activity Type</label>
+            <select id="f-activityType" class="field-input">
+              <option value="">Select</option>
+              <option>Court Hearing</option><option>Client Consultation</option><option>Document Filing</option>
+              <option>Research</option><option>Drafting Petition</option><option>Evidence Collection</option>
+              <option>Witness Interview</option><option>Bail Application</option><option>Appeal Filing</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label id="lbl-status">Status</label>
+            <select id="f-status" class="field-input">
+              <option>Active</option><option>Pending</option><option>Closed</option><option>Urgent</option>
+            </select>
+          </div>
+          <div class="field-group"><label id="lbl-fee">Fee (₨)</label><input id="f-fee" class="field-input" type="number" placeholder="50000" /></div>
+        </div>
+        <div class="section-title" style="color:#22c55e" id="sec-client">👤 CLIENT INFORMATION</div>
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="field-group"><label id="lbl-clientName">Client Name *</label><input id="f-clientName" class="field-input" /></div>
+          <div class="field-group"><label id="lbl-mobile">📱 Mobile Number</label><input id="f-clientMobile" class="field-input" type="tel" placeholder="03XX-XXXXXXX" /></div>
+          <div class="field-group" style="grid-column:1/-1"><label id="lbl-address">🏠 Client Address</label><textarea id="f-clientAddress" class="field-input" rows="2" style="resize:vertical"></textarea></div>
+        </div>
+        <div class="section-title" style="color:#f59e0b" id="sec-notes">📝 DETAILS & NOTES</div>
+        <div class="field-group"><label id="lbl-desc">Case Description</label><textarea id="f-description" class="field-input" rows="3" style="resize:vertical"></textarea></div>
+        <div class="field-group"><label id="lbl-notes">Additional Notes</label><textarea id="f-notes" class="field-input" rows="2" style="resize:vertical"></textarea></div>
+
+        <!-- AD IN FORM -->
+        <div class="ad-banner" style="margin:16px 0">
+          <div>
+            <div class="ad-label">Advertisement</div>
+            <ins class="adsbygoogle" style="display:inline-block;width:300px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button onclick="saveCase()" id="save-btn" class="btn-primary" data-ur="💾 کیس محفوظ کریں" data-en="💾 Save Case">💾 Save Case</button>
+          <button onclick="cancelForm()" class="btn-secondary" id="cancel-btn" data-ur="منسوخ" data-en="Cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL CASES -->
+    <div id="page-cases" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div><h2 id="cases-title" style="font-size:20px;font-weight:700;color:#f1f5f9">📁 All Cases</h2><p id="cases-count" style="color:#64748b;font-size:12px"></p></div>
+        <button onclick="newCase()" class="btn-primary" style="padding:9px 16px;font-size:13px" id="new-case-btn" data-ur="➕ نیا کیس" data-en="➕ New Case">➕ New Case</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:12px">
+        <input id="search-input" class="field-input" style="flex:1" oninput="renderCases()" />
+        <select id="filter-status" class="field-input" style="width:110px" onchange="renderCases()">
+          <option value="All">All</option><option>Active</option><option>Pending</option><option>Closed</option><option>Urgent</option>
+        </select>
+      </div>
+      <!-- AD IN CASES -->
+      <div class="ad-banner">
+        <div>
+          <div class="ad-label">Advertisement</div>
+          <ins class="adsbygoogle" style="display:inline-block;width:300px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+      <div id="cases-list"></div>
+    </div>
+
+    <!-- CASE DETAIL -->
+    <div id="page-detail" class="page">
+      <button onclick="showPage('cases')" id="back-btn" style="background:transparent;border:none;color:#60a5fa;font-size:13px;margin-bottom:16px;padding:0;cursor:pointer">← Back to Cases</button>
+      <div id="detail-content" style="background:#0f172a;border:1px solid #1e3a5f;border-radius:16px;padding:24px"></div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="page-calendar" class="page">
+      <h2 id="cal-title" style="font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:4px">📅 Hearings Schedule</h2>
+      <p id="cal-sub" style="color:#64748b;font-size:13px;margin-bottom:20px">All scheduled hearings</p>
+      <!-- AD IN CALENDAR -->
+      <div class="ad-banner">
+        <div>
+          <div class="ad-label">Advertisement</div>
+          <ins class="adsbygoogle" style="display:inline-block;width:300px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+      <div id="calendar-list"></div>
+    </div>
+
+  </main>
+
+  <footer style="border-top:1px solid #1e293b;padding:10px 20px;text-align:center;font-size:11px;color:#334155">
+    LexTrack Pro · <span id="footer-user"></span>
+    <!-- FOOTER AD -->
+    <div class="ad-banner" style="margin-top:8px">
+      <div>
+        <div class="ad-label">Advertisement</div>
+        <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// CONSTANTS & STATE
+// ══════════════════════════════════════
+const STORAGE_KEY="advocate_cases_v1", USERS_KEY="advocate_users_v1", SESSION_KEY="advocate_session_v1", LANG_KEY="advocate_lang_v1";
+const STATUS_COLORS={Active:"#22c55e",Pending:"#f59e0b",Closed:"#6b7280",Urgent:"#ef4444"};
+const FIELDS=["caseNumber","clientName","clientMobile","clientAddress","judgeName","courtName","courtDate","courtTime","activityType","description","status","fee","nextHearing","notes"];
+
+let currentUser=null, cases=[], editId=null, authMode="login", currentPage="dashboard";
+let lang = localStorage.getItem(LANG_KEY) || "en";
+
+const today=new Date().toISOString().split("T")[0];
+
+// ══════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════
+const T = {
+  en: {
+    welcome: "Welcome", today_hearing: "Today's Hearing!", no_hearing: "No hearings today.",
+    no_cases: "No cases yet. Add your first case!", search_placeholder: "🔍 Search by name, case no, mobile...",
+    total:"Total Cases", active:"Active", todayH:"Today's Hearings", urgent:"Urgent",
+    back:"← Back to Cases", save:"💾 Save Case", update:"✅ Update Case", cancel:"Cancel",
+    add_title:"➕ Add New Case", edit_title:"✏️ Edit Case", saving:"⏳ Saving...",
+    saved:"Case saved successfully!", updated:"Case updated successfully!", deleted:"Case deleted.",
+    confirm_del:"Delete this case?", required:"Case Number and Client Name are required!",
+    logout:"Logout", no_hearings:"No hearings scheduled yet.", past:"Past",
+    tomorrow_label:"Tomorrow", details:"Details →",
+    alert_title:"Today's Court Hearing Reminder", view_hearings:"📅 View All Hearings", close:"Close ✕",
+    login:"🔐 Login", register:"📝 Register", do_login:"🔐 Login", do_register:"✅ Create Account",
+    name_label:"Advocate Name", confirm_label:"Confirm Password",
+    no_account:"Don't have an account?", reg_here:"Register here",
+    have_account:"Already have an account?", login_here:"Login here",
+    err_required:"Email and Password are required", err_name:"Name is required",
+    err_short:"Password must be at least 6 characters", err_match:"Passwords do not match",
+    err_exists:"This email is already registered", err_wrong:"Email or Password is incorrect",
+    err_general:"Something went wrong, please try again",
+    sec_case:"⚖️ CASE INFORMATION", sec_client:"👤 CLIENT INFORMATION", sec_notes:"📝 DETAILS & NOTES",
+    lbl_caseNum:"Case Number *", lbl_date:"Hearing Date", lbl_judge:"Judge Name", lbl_time:"Hearing Time",
+    lbl_court:"Court Name", lbl_next:"Next Hearing", lbl_activity:"Activity Type", lbl_status:"Status",
+    lbl_fee:"Fee (₨)", lbl_name:"Client Name *", lbl_mobile:"📱 Mobile Number", lbl_address:"🏠 Client Address",
+    lbl_desc:"Case Description", lbl_notes:"Additional Notes",
+    today_tag:"TODAY", case_no:"Case No.", client:"Client", judge:"Judge", hearing:"Hearing",
+    cal_title:"📅 Hearings Schedule", cal_sub:"All scheduled hearings",
+    recent:"🕐 Recent Cases", today_list:"📅 Today's Hearings",
+    cases_title:"📁 All Cases", dash_date: new Date().toDateString(),
+    footer_data:"Data saved locally"
+  },
+  ur: {
+    welcome: "خوش آمدید", today_hearing: "آج کی پیشی!", no_hearing: "آج کوئی پیشی نہیں۔",
+    no_cases: "ابھی کوئی کیس نہیں۔ پہلا کیس شامل کریں!", search_placeholder: "🔍 نام، کیس نمبر، موبائل سے تلاش...",
+    total:"کل کیسز", active:"فعال", todayH:"آج کی پیشیاں", urgent:"فوری",
+    back:"← واپس کیسز", save:"💾 کیس محفوظ کریں", update:"✅ اپ ڈیٹ کریں", cancel:"منسوخ",
+    add_title:"➕ نیا کیس شامل کریں", edit_title:"✏️ کیس ترمیم", saving:"⏳ محفوظ ہو رہا ہے...",
+    saved:"کیس محفوظ ہو گیا!", updated:"کیس اپ ڈیٹ ہو گیا!", deleted:"کیس حذف ہو گیا۔",
+    confirm_del:"یہ کیس حذف کریں؟", required:"کیس نمبر اور موکل کا نام ضروری ہیں!",
+    logout:"لاگ آؤٹ", no_hearings:"ابھی کوئی پیشی نہیں۔", past:"گزر چکا",
+    tomorrow_label:"کل", details:"تفصیل →",
+    alert_title:"آج کی پیشی یاد دہانی", view_hearings:"📅 تمام پیشیاں دیکھیں", close:"بند کریں ✕",
+    login:"🔐 لاگ ان", register:"📝 رجسٹر", do_login:"🔐 لاگ ان کریں", do_register:"✅ اکاؤنٹ بنائیں",
+    name_label:"وکیل کا نام", confirm_label:"Password تصدیق",
+    no_account:"اکاؤنٹ نہیں؟", reg_here:"رجسٹر کریں",
+    have_account:"پہلے سے اکاؤنٹ ہے؟", login_here:"لاگ ان کریں",
+    err_required:"Email اور Password ضروری ہیں", err_name:"نام ضروری ہے",
+    err_short:"Password کم از کم 6 حروف کا ہو", err_match:"Passwords میل نہیں کھاتے",
+    err_exists:"یہ Email پہلے سے رجسٹرڈ ہے", err_wrong:"Email یا Password غلط ہے",
+    err_general:"کچھ غلط ہوا، دوبارہ کوشش کریں",
+    sec_case:"⚖️ کیس کی معلومات", sec_client:"👤 موکل کی معلومات", sec_notes:"📝 تفصیلات",
+    lbl_caseNum:"کیس نمبر *", lbl_date:"پیشی کی تاریخ", lbl_judge:"جج کا نام", lbl_time:"پیشی کا وقت",
+    lbl_court:"عدالت کا نام", lbl_next:"اگلی پیشی", lbl_activity:"سرگرمی کی قسم", lbl_status:"حیثیت",
+    lbl_fee:"فیس (₨)", lbl_name:"موکل کا نام *", lbl_mobile:"📱 موبائل نمبر", lbl_address:"🏠 موکل کا پتہ",
+    lbl_desc:"کیس کی تفصیل", lbl_notes:"اضافی نوٹس",
+    today_tag:"آج", case_no:"کیس نمبر", client:"موکل", judge:"جج", hearing:"پیشی",
+    cal_title:"📅 پیشیوں کا شیڈول", cal_sub:"تمام مقررہ پیشیاں",
+    recent:"🕐 حالیہ کیسز", today_list:"📅 آج کی پیشیاں",
+    cases_title:"📁 تمام کیسز", dash_date: new Date().toLocaleDateString("ur-PK",{weekday:"long",year:"numeric",month:"long",day:"numeric"}),
+    footer_data:"ڈیٹا محفوظ ہے"
+  }
+};
+
+function t(key){ return T[lang][key] || T.en[key] || key; }
+
+// ══════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  localStorage.setItem(LANG_KEY, l);
+  document.documentElement.lang = l;
+  document.documentElement.dir = l==="ur" ? "rtl" : "ltr";
+  // update toggle buttons
+  ["auth-lang-ur","app-lang-ur"].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.toggle("active",l==="ur");}});
+  ["auth-lang-en","app-lang-en"].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.toggle("active",l==="en");}});
+  applyLang();
+}
+
+function applyLang() {
+  // Auth buttons
+  const tl=document.getElementById("tab-login"), tr=document.getElementById("tab-register");
+  if(tl) tl.textContent = t("login");
+  if(tr) tr.textContent = t("register");
+  const ab=document.getElementById("auth-btn");
+  if(ab) ab.textContent = authMode==="register" ? t("do_register") : t("do_login");
+  updateAuthSwitch();
+  // Labels in form
+  const lmap={
+    "lbl-caseNum":"lbl_caseNum","lbl-courtDate":"lbl_date","lbl-judge":"lbl_judge","lbl-time":"lbl_time",
+    "lbl-court":"lbl_court","lbl-next":"lbl_next","lbl-activity":"lbl_activity","lbl-status":"lbl_status",
+    "lbl-fee":"lbl_fee","lbl-clientName":"lbl_name","lbl-mobile":"lbl_mobile","lbl-address":"lbl_address",
+    "lbl-desc":"lbl_desc","lbl-notes":"lbl_notes"
+  };
+  Object.entries(lmap).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
+  // Section titles
+  const smap={"sec-case":"sec_case","sec-client":"sec_client","sec-notes":"sec_notes"};
+  Object.entries(smap).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
+  // Buttons
+  const bmap={"save-btn":editId?"update":"save","cancel-btn":"cancel","back-btn":"back","logout-btn":"logout","new-case-btn":"","alert-view-btn":"view_hearings","alert-close-btn":"close"};
+  const el_sb=document.getElementById("save-btn"); if(el_sb) el_sb.textContent=t(editId?"update":"save");
+  const el_cb=document.getElementById("cancel-btn"); if(el_cb) el_cb.textContent=t("cancel");
+  const el_bb=document.getElementById("back-btn"); if(el_bb) el_bb.textContent=t("back");
+  const el_lb=document.getElementById("logout-btn"); if(el_lb) el_lb.textContent=t("logout");
+  const el_vb=document.getElementById("alert-view-btn"); if(el_vb) el_vb.textContent=t("view_hearings");
+  const el_xb=document.getElementById("alert-close-btn"); if(el_xb) el_xb.textContent=t("close");
+  const el_nb=document.getElementById("new-case-btn"); if(el_nb) el_nb.textContent=t("add_title").replace("➕ ","➕ ");
+  // Nav labels
+  const navmap={"Dashboard":"dashboard","New Case":"add","نیا کیس":"add","All Cases":"cases","تمام کیسز":"cases","Hearings":"calendar","پیشیاں":"calendar"};
+  // Page texts
+  const el_ct=document.getElementById("cal-title"); if(el_ct) el_ct.textContent=t("cal_title");
+  const el_cs=document.getElementById("cal-sub"); if(el_cs) el_cs.textContent=t("cal_sub");
+  const el_cas=document.getElementById("cases-title"); if(el_cas) el_cas.textContent=t("cases_title");
+  const el_si=document.getElementById("search-input"); if(el_si) el_si.placeholder=t("search_placeholder");
+  const el_at=document.getElementById("alert-title"); if(el_at) el_at.textContent=t("alert_title");
+  const el_th=document.getElementById("today-heading"); if(el_th) el_th.textContent=t("today_list");
+  const el_rh=document.getElementById("recent-heading"); if(el_rh) el_rh.textContent=t("recent");
+  const el_da=document.getElementById("detail-arrow"); if(el_da) el_da.textContent=t("details");
+  const el_dd=document.getElementById("dash-date"); if(el_dd) el_dd.textContent=t("dash_date");
+  // re-render if on page
+  if(currentPage==="dashboard") renderDashboard();
+  if(currentPage==="cases") renderCases();
+  if(currentPage==="calendar") renderCalendar();
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.addEventListener("DOMContentLoaded",()=>{
+  setLang(lang);
+  try{ const s=localStorage.getItem(SESSION_KEY); if(s){currentUser=JSON.parse(s);initApp();} }catch{}
+  updateAuthSwitch();
+});
+
+function initApp(){
+  try{ const s=localStorage.getItem(STORAGE_KEY+"_"+currentUser.id); cases=s?JSON.parse(s):[]; }catch{cases=[];}
+  document.getElementById("auth-screen").classList.remove("active");
+  document.getElementById("app-shell").classList.add("active");
+  document.getElementById("user-avatar").textContent=(currentUser.name||"V")[0].toUpperCase();
+  document.getElementById("user-name-display").textContent=currentUser.name||"Advocate";
+  document.getElementById("user-email-display").textContent=currentUser.email;
+  document.getElementById("footer-user").textContent=currentUser.name||"Advocate";
+  applyLang();
+  showPage("dashboard");
+  checkTodayAlerts();
+}
+
+function saveCases(){ try{localStorage.setItem(STORAGE_KEY+"_"+currentUser.id,JSON.stringify(cases));}catch{} }
+
+// ══════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════
+function updateAuthSwitch(){
+  const el=document.getElementById("auth-switch-text");
+  if(!el) return;
+  if(authMode==="register")
+    el.innerHTML=`${t("have_account")} <span onclick="switchAuthMode('login')" style="color:#60a5fa;cursor:pointer;font-weight:600">${t("login_here")}</span>`;
+  else
+    el.innerHTML=`${t("no_account")} <span onclick="switchAuthMode('register')" style="color:#60a5fa;cursor:pointer;font-weight:600">${t("reg_here")}</span>`;
+}
+
+function switchAuthMode(mode){
+  authMode=mode;
+  const isReg=mode==="register";
+  document.getElementById("field-name").style.display=isReg?"block":"none";
+  document.getElementById("field-confirm").style.display=isReg?"block":"none";
+  document.getElementById("tab-login").style.background=!isReg?"linear-gradient(135deg,#3b82f6,#6366f1)":"transparent";
+  document.getElementById("tab-login").style.color=!isReg?"#fff":"#64748b";
+  document.getElementById("tab-register").style.background=isReg?"linear-gradient(135deg,#3b82f6,#6366f1)":"transparent";
+  document.getElementById("tab-register").style.color=isReg?"#fff":"#64748b";
+  document.getElementById("tab-login").textContent=t("login");
+  document.getElementById("tab-register").textContent=t("register");
+  document.getElementById("auth-btn").textContent=isReg?t("do_register"):t("do_login");
+  document.getElementById("auth-error").style.display="none";
+  ["auth-name","auth-email","auth-password","auth-confirm"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  updateAuthSwitch();
+}
+
+async function doAuth(){
+  const btn=document.getElementById("auth-btn");
+  document.getElementById("auth-error").style.display="none";
+  const email=document.getElementById("auth-email").value.trim();
+  const password=document.getElementById("auth-password").value;
+  if(!email||!password){showAuthError(t("err_required"));return;}
+  btn.textContent="⏳..."; btn.disabled=true;
+  await new Promise(r=>setTimeout(r,600));
+  try{
+    const users=JSON.parse(localStorage.getItem(USERS_KEY)||"[]");
+    if(authMode==="register"){
+      const name=document.getElementById("auth-name").value.trim();
+      const confirm=document.getElementById("auth-confirm").value;
+      if(!name){showAuthError(t("err_name"));btn.disabled=false;btn.textContent=t("do_register");return;}
+      if(password.length<6){showAuthError(t("err_short"));btn.disabled=false;btn.textContent=t("do_register");return;}
+      if(password!==confirm){showAuthError(t("err_match"));btn.disabled=false;btn.textContent=t("do_register");return;}
+      if(users.find(u=>u.email===email)){showAuthError(t("err_exists"));btn.disabled=false;btn.textContent=t("do_register");return;}
+      currentUser={id:Date.now().toString(),name,email,password,createdAt:new Date().toISOString()};
+      localStorage.setItem(USERS_KEY,JSON.stringify([...users,currentUser]));
+    }else{
+      const user=users.find(u=>u.email===email&&u.password===password);
+      if(!user){showAuthError(t("err_wrong"));btn.disabled=false;btn.textContent=t("do_login");return;}
+      currentUser=user;
+    }
+    localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser));
+    initApp();
+  }catch{showAuthError(t("err_general"));}
+  btn.disabled=false;
+}
+
+function showAuthError(msg){const el=document.getElementById("auth-error");el.textContent="⚠️ "+msg;el.style.display="block";}
+
+function doLogout(){
+  localStorage.removeItem(SESSION_KEY);
+  currentUser=null;cases=[];
+  document.getElementById("app-shell").classList.remove("active");
+  document.getElementById("auth-screen").classList.add("active");
+  switchAuthMode("login");
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function showPage(page){
+  currentPage=page;
+  ["dashboard","add","cases","detail","calendar"].forEach(p=>{
+    document.getElementById("page-"+p).classList.remove("active");
+    const nb=document.getElementById("nav-"+p);
+    if(nb)nb.classList.remove("active");
+  });
+  document.getElementById("page-"+page).classList.add("active");
+  const nb=document.getElementById("nav-"+page);
+  if(nb)nb.classList.add("active");
+  if(page==="dashboard")renderDashboard();
+  if(page==="cases")renderCases();
+  if(page==="calendar")renderCalendar();
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════════
+// ALERTS
+// ══════════════════════════════════════
+function checkTodayAlerts(){
+  const tc=cases.filter(c=>c.courtDate===today||c.nextHearing===today);
+  const bb=document.getElementById("bell-btn"), badge=document.getElementById("today-badge");
+  if(tc.length>0){bb.style.display="flex";badge.style.display="inline-flex";badge.textContent=tc.length;fillAlertModal(tc);document.getElementById("alert-modal").classList.add("active");}
+  else{bb.style.display="none";}
+}
+
+function fillAlertModal(tc){
+  document.getElementById("alert-title").textContent=t("alert_title");
+  document.getElementById("alert-date").textContent="📅 "+t("dash_date");
+  document.getElementById("alert-cases-list").innerHTML=tc.map(c=>`
+    <div style="background:#1e293b;border:1px solid #f59e0b44;border-radius:12px;padding:14px 16px;margin-bottom:10px;border-left:4px solid #f59e0b">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <div><div style="font-size:14px;font-weight:800;color:#f1f5f9">${c.clientName}</div><div style="font-size:11px;color:#3b82f6;font-weight:700">#${c.caseNumber}</div></div>
+        <span class="badge" style="background:${STATUS_COLORS[c.status]}22;color:${STATUS_COLORS[c.status]};height:fit-content">${c.status}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px">
+        ${c.judgeName?`<span><span style="color:#64748b">${t("judge")}: </span>${c.judgeName}</span>`:""}
+        ${c.courtName?`<span><span style="color:#64748b">${t("lbl_court").replace(" *","")}: </span>${c.courtName}</span>`:""}
+        ${c.courtTime?`<span style="color:#f59e0b;font-weight:700">⏰ ${c.courtTime}</span>`:""}
+        ${c.clientMobile?`<span style="color:#60a5fa">📱 ${c.clientMobile}</span>`:""}
+      </div>
+    </div>`).join("");
+}
+
+function showAlert(){const tc=cases.filter(c=>c.courtDate===today||c.nextHearing===today);if(tc.length>0){fillAlertModal(tc);document.getElementById("alert-modal").classList.add("active");}}
+function closeAlert(){document.getElementById("alert-modal").classList.remove("active");}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function showToast(msg,type="success"){
+  const el=document.getElementById("toast");
+  el.textContent=(type==="error"?"❌ ":"✅ ")+msg;
+  el.style.background=type==="error"?"#7f1d1d":"#14532d";
+  el.style.color="#fff";
+  el.classList.add("active");
+  setTimeout(()=>el.classList.remove("active"),4000);
+}
+
+// ══════════════════════════════════════
+// CASE FORM
+// ══════════════════════════════════════
+function newCase(){
+  editId=null;
+  FIELDS.forEach(f=>{const el=document.getElementById("f-"+f);if(el)el.value=f==="status"?"Active":"";});
+  document.getElementById("form-title").textContent=t("add_title");
+  document.getElementById("save-btn").textContent=t("save");
+  showPage("add");
+}
+
+function editCase(id){
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  editId=id;
+  FIELDS.forEach(f=>{const el=document.getElementById("f-"+f);if(el)el.value=c[f]||"";});
+  document.getElementById("form-title").textContent=t("edit_title");
+  document.getElementById("save-btn").textContent=t("update");
+  showPage("add");
+}
+
+function cancelForm(){editId=null;showPage("cases");}
+
+async function saveCase(){
+  const caseNumber=document.getElementById("f-caseNumber").value.trim();
+  const clientName=document.getElementById("f-clientName").value.trim();
+  if(!caseNumber||!clientName){showToast(t("required"),"error");return;}
+  const btn=document.getElementById("save-btn");
+  btn.textContent=t("saving");btn.disabled=true;
+  await new Promise(r=>setTimeout(r,500));
+  const data={};
+  FIELDS.forEach(f=>{const el=document.getElementById("f-"+f);data[f]=el?el.value.trim():"";});
+  if(editId){
+    cases=cases.map(c=>c.id===editId?{...data,id:editId,updatedAt:new Date().toISOString(),createdAt:c.createdAt}:c);
+    showToast(t("updated"));
+  }else{
+    cases.unshift({...data,id:Date.now().toString(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
+    showToast(t("saved"));
+    if(data.courtDate===today||data.nextHearing===today){checkTodayAlerts();showAlert();}
+  }
+  saveCases();editId=null;btn.disabled=false;
+  showPage("cases");
+}
+
+function deleteCase(id){
+  if(!confirm(t("confirm_del")))return;
+  cases=cases.filter(c=>c.id!==id);
+  saveCases();showToast(t("deleted"),"error");
+  checkTodayAlerts();renderCases();
+}
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+function renderDashboard(){
+  const tc=cases.filter(c=>c.courtDate===today||c.nextHearing===today);
+  const td2=new Date();td2.setDate(td2.getDate()+1);
+  const tomorrow=td2.toISOString().split("T")[0];
+  const tomC=cases.filter(c=>c.courtDate===tomorrow||c.nextHearing===tomorrow);
+  const un=document.getElementById("dash-welcome");
+  if(un)un.textContent=t("welcome")+(currentUser?.name?", "+currentUser.name:"")+" 👋";
+  document.getElementById("stat-total").textContent=cases.length;
+  document.getElementById("stat-active").textContent=cases.filter(c=>c.status==="Active").length;
+  document.getElementById("stat-today").textContent=tc.length;
+  document.getElementById("stat-urgent").textContent=cases.filter(c=>c.status==="Urgent").length;
+  const tb=document.getElementById("today-banner");
+  if(tc.length>0){tb.style.display="block";document.getElementById("today-banner-text").textContent=`${tc.length} ${t("today_hearing")}`;document.getElementById("today-banner-names").textContent=tc.map(c=>c.clientName).join(" · ");}
+  else tb.style.display="none";
+  const tmb=document.getElementById("tomorrow-banner");
+  if(tomC.length>0){tmb.style.display="block";document.getElementById("tomorrow-banner-text").textContent=`${t("tomorrow_label")} ${tomC.length}:`;document.getElementById("tomorrow-banner-names").textContent=tomC.map(c=>`${c.clientName}(#${c.caseNumber})`).join(" · ");}
+  else tmb.style.display="none";
+  document.getElementById("dash-today-list").innerHTML=tc.length===0?`<p style="color:#475569;font-size:13px">${t("no_hearing")}</p>`:
+    tc.map(c=>`<div class="card today" onclick="openDetail('${c.id}')" style="padding:10px 12px;margin-bottom:8px;border-radius:8px">
+      <div style="font-weight:700;font-size:13px">${c.clientName}</div>
+      <div style="font-size:11px;color:#64748b">#${c.caseNumber}${c.courtName?" · "+c.courtName:""}${c.courtTime?" · ⏰"+c.courtTime:""}</div>
+      ${c.clientMobile?`<div style="font-size:11px;color:#60a5fa">📱 ${c.clientMobile}</div>`:""}
+    </div>`).join("");
+  document.getElementById("dash-recent-list").innerHTML=cases.length===0?`<p style="color:#475569;font-size:13px">${t("no_cases")}</p>`:
+    cases.slice(0,5).map(c=>`<div class="card" onclick="openDetail('${c.id}')" style="padding:9px 12px;margin-bottom:7px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:600;font-size:13px">${c.clientName}</div><div style="font-size:11px;color:#64748b">#${c.caseNumber}</div></div>
+      <span class="badge" style="background:${STATUS_COLORS[c.status]}22;color:${STATUS_COLORS[c.status]}">${c.status}</span>
+    </div>`).join("");
+}
+
+// ══════════════════════════════════════
+// CASES LIST
+// ══════════════════════════════════════
+function renderCases(){
+  const q=(document.getElementById("search-input")?.value||"").toLowerCase();
+  const fs=document.getElementById("filter-status")?.value||"All";
+  const filtered=cases.filter(c=>{
+    const ms=!q||c.caseNumber.toLowerCase().includes(q)||c.clientName.toLowerCase().includes(q)||(c.judgeName||"").toLowerCase().includes(q)||(c.clientMobile||"").includes(q)||(c.clientAddress||"").toLowerCase().includes(q);
+    return ms&&(fs==="All"||c.status===fs);
+  });
+  const cc=document.getElementById("cases-count");
+  if(cc)cc.textContent=filtered.length+" "+(lang==="ur"?"کیسز":"cases");
+  const list=document.getElementById("cases-list");
+  if(!list)return;
+  if(filtered.length===0){list.innerHTML=`<div style="text-align:center;padding:60px;color:#475569"><div style="font-size:48px">📂</div><p>${t("no_cases")}</p></div>`;return;}
+  list.innerHTML=filtered.map(c=>{
+    const isT=c.courtDate===today||c.nextHearing===today;
+    return `<div class="card ${isT?'today':''}" onclick="openDetail('${c.id}')">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:14px;flex-wrap:wrap;flex:1">
+          <div style="min-width:80px"><div style="font-size:10px;color:#64748b">${t("case_no")}</div><div style="font-weight:700;color:#3b82f6;font-size:13px">#${c.caseNumber}</div></div>
+          <div style="min-width:110px"><div style="font-size:10px;color:#64748b">${t("client")}</div><div style="font-weight:600;font-size:13px">${c.clientName}</div>${c.clientMobile?`<div style="font-size:10px;color:#60a5fa">📱 ${c.clientMobile}</div>`:""}</div>
+          <div style="min-width:100px"><div style="font-size:10px;color:#64748b">${t("judge")}</div><div style="font-size:12px;color:#cbd5e1">${c.judgeName||"—"}</div></div>
+          <div><div style="font-size:10px;color:#64748b">${t("hearing")}</div><div style="font-size:12px;color:${isT?"#f59e0b":"#cbd5e1"};font-weight:${isT?700:400}">${c.courtDate||"—"}${isT?" 🔔":""}</div></div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${isT?`<span class="badge" style="background:#f59e0b22;color:#f59e0b">${t("today_tag")}</span>`:""}
+          <span class="badge" style="background:${STATUS_COLORS[c.status]}22;color:${STATUS_COLORS[c.status]}">${c.status}</span>
+          <button class="btn-edit" onclick="event.stopPropagation();editCase('${c.id}')">${lang==="ur"?"ترمیم":"Edit"}</button>
+          <button class="btn-del" onclick="event.stopPropagation();deleteCase('${c.id}')">${lang==="ur"?"حذف":"Delete"}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════
+// CASE DETAIL
+// ══════════════════════════════════════
+function openDetail(id){
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  const isT=c.courtDate===today||c.nextHearing===today;
+  const fields=[
+    {label:t("judge"),value:c.judgeName},{label:lang==="ur"?"عدالت":"Court",value:c.courtName},
+    {label:t("lbl_date"),value:c.courtDate},{label:lang==="ur"?"وقت":"Time",value:c.courtTime},
+    {label:t("lbl_next"),value:c.nextHearing},{label:t("lbl_activity"),value:c.activityType},
+    {label:t("lbl_fee"),value:c.fee?`₨${c.fee}`:""}
+  ].filter(f=>f.value);
+  document.getElementById("detail-content").innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+      <div>
+        <h2 style="font-size:20px;font-weight:800;color:#f1f5f9">${c.clientName}</h2>
+        <div style="color:#3b82f6;font-weight:700;font-size:13px;margin-top:3px">${t("case_no")} #${c.caseNumber}</div>
+        ${c.clientMobile?`<div style="font-size:13px;margin-top:4px"><a href="tel:${c.clientMobile}" style="color:#60a5fa;text-decoration:none">📱 ${c.clientMobile}</a></div>`:""}
+        ${c.clientAddress?`<div style="font-size:12px;color:#94a3b8;margin-top:3px">🏠 ${c.clientAddress}</div>`:""}
+        ${isT?`<div style="margin-top:8px;padding:5px 12px;background:#f59e0b22;border:1px solid #f59e0b;border-radius:20px;display:inline-block;font-size:11px;color:#f59e0b;font-weight:700">🔔 ${lang==="ur"?"آج اس کیس کی پیشی ہے!":"Today's hearing!"}</div>`:""}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge" style="background:${STATUS_COLORS[c.status]}22;color:${STATUS_COLORS[c.status]};padding:4px 12px">${c.status}</span>
+        <button class="btn-edit" style="padding:7px 14px;font-size:12px" onclick="editCase('${c.id}')">${lang==="ur"?"ترمیم":"Edit"}</button>
+        <button class="btn-del" style="padding:7px 14px;font-size:12px" onclick="if(confirm(t('confirm_del'))){deleteCase('${c.id}');showPage('cases')}">${lang==="ur"?"حذف":"Delete"}</button>
+      </div>
+    </div>
+    ${fields.length>0?`<div class="section-title" style="color:#3b82f6">${t("sec_case")}</div>
+    <div class="grid-3" style="margin-bottom:16px">
+      ${fields.map(f=>`<div style="background:#1e293b;padding:12px 14px;border-radius:10px"><div style="font-size:9px;color:#64748b;margin-bottom:3px">${f.label.toUpperCase()}</div><div style="font-size:13px;font-weight:600;color:#e2e8f0">${f.value}</div></div>`).join("")}
+    </div>`:""}
+    ${c.clientMobile||c.clientAddress?`<div class="section-title" style="color:#22c55e">${t("sec_client")}</div>
+    <div class="grid-2" style="margin-bottom:16px">
+      ${c.clientMobile?`<div style="background:#1e293b;padding:12px 14px;border-radius:10px"><div style="font-size:9px;color:#64748b;margin-bottom:3px">${t("lbl_mobile")}</div><a href="tel:${c.clientMobile}" style="font-size:14px;font-weight:700;color:#60a5fa;text-decoration:none">📱 ${c.clientMobile}</a></div>`:""}
+      ${c.clientAddress?`<div style="background:#1e293b;padding:12px 14px;border-radius:10px"><div style="font-size:9px;color:#64748b;margin-bottom:3px">${t("lbl_address")}</div><div style="font-size:12px;color:#e2e8f0">🏠 ${c.clientAddress}</div></div>`:""}
+    </div>`:""}
+    ${c.description?`<div style="background:#1e293b;padding:14px 16px;border-radius:10px;margin-bottom:10px"><div style="font-size:9px;color:#64748b;margin-bottom:5px">${t("lbl_desc").toUpperCase()}</div><p style="color:#cbd5e1;line-height:1.7;font-size:13px">${c.description}</p></div>`:""}
+    ${c.notes?`<div style="background:#1e293b;padding:14px 16px;border-radius:10px;border-left:3px solid #f59e0b"><div style="font-size:9px;color:#64748b;margin-bottom:5px">${t("lbl_notes").toUpperCase()}</div><p style="color:#cbd5e1;line-height:1.7;font-size:13px">${c.notes}</p></div>`:""}
+    <div style="margin-top:14px;font-size:10px;color:#475569">${new Date(c.createdAt).toLocaleString()} · ${new Date(c.updatedAt).toLocaleString()}</div>`;
+  showPage("detail");
+}
+
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
+function renderCalendar(){
+  const all=cases.filter(c=>c.courtDate||c.nextHearing).sort((a,b)=>(a.courtDate||a.nextHearing).localeCompare(b.courtDate||b.nextHearing));
+  const list=document.getElementById("calendar-list");
+  if(!list)return;
+  if(all.length===0){list.innerHTML=`<div style="text-align:center;padding:60px;color:#475569"><div style="font-size:48px">📅</div><p>${t("no_hearings")}</p></div>`;return;}
+  list.innerHTML=all.map(c=>{
+    const hd=c.courtDate||c.nextHearing,isT=hd===today,isP=hd<today;
+    return `<div class="card ${isT?'today':''}" onclick="openDetail('${c.id}')" style="display:flex;gap:14px;align-items:center">
+      <div style="min-width:60px;text-align:center;background:${isT?"#f59e0b22":"#1e293b"};padding:8px 10px;border-radius:8px">
+        <div style="font-size:18px;font-weight:800;color:${isT?"#f59e0b":isP?"#475569":"#60a5fa"}">${new Date(hd+"T00:00:00").getDate()}</div>
+        <div style="font-size:8px;color:#64748b">${new Date(hd+"T00:00:00").toLocaleString("default",{month:"short",year:"numeric"})}</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px;color:${isP?"#64748b":"#e2e8f0"}">${c.clientName}</div>
+        <div style="font-size:11px;color:#64748b">#${c.caseNumber} · ${c.courtName||""} · ${t("judge")}: ${c.judgeName||"—"}</div>
+        <div style="display:flex;gap:10px;margin-top:2px">
+          ${c.courtTime?`<span style="font-size:10px;color:#94a3b8">⏰ ${c.courtTime}</span>`:""}
+          ${c.clientMobile?`<span style="font-size:10px;color:#60a5fa">📱 ${c.clientMobile}</span>`:""}
+        </div>
+      </div>
+      ${isT?`<span class="badge" style="background:#f59e0b22;color:#f59e0b;padding:3px 10px">🔔 ${t("today_tag")}</span>`:""}
+      ${isP&&!isT?`<span style="color:#475569;font-size:10px">${t("past")}</span>`:""}
+      <span class="badge" style="background:${STATUS_COLORS[c.status]}22;color:${STATUS_COLORS[c.status]}">${c.status}</span>
+    </div>`;
+  }).join("");
+}
+</script>
+</body>
+</html>
